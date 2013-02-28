@@ -1,0 +1,291 @@
+<html>
+<head>
+	<style type="text/css" media="screen">
+	
+	body {
+		margin: 0;
+		font: 18px Helvetica-Neue, Helvetica, sans-serif;
+		font-weight: 100;
+		padding: 0;
+		background: #CCC;
+		background: -webkit-repeating-linear-gradient(45deg, #CCC, #CCC 10px, #C9C9C9 10px, #C9C9C9 20px) center center;
+	}
+	span {
+		display: block;
+		margin-right: 44px;
+		padding: 8px;
+		-webkit-box-sizing:border-box;
+		box-sizing:border-box;
+		vertical-align:middle;
+		min-height: 34px;
+	}
+	body > div {
+		background: #FFF;
+		position: absolute;
+		top: 20px;
+		bottom: 20px;
+		left: 10%;
+		right: 10%;
+		-webkit-transition: 200ms;
+		box-shadow: 0 0 5px hsla(0,0%,0%,0.25);
+	}
+	
+	div.new {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		background: #FFF;
+		background: -webkit-linear-gradient(#FFF, #EFEFEF, #FFF);
+		z-index:10;
+	}
+	div.new::before {
+		content:'';
+		position: absolute;
+		top:100%;
+		left:0;
+		right:0;
+		height:5px;
+		background:transparent;
+		background:-webkit-linear-gradient(hsla(0,0%,0%,0.1), hsla(0,0%,0%,0.0));
+	}
+	
+	
+	ul {
+		z-index:9;
+		list-style:none;
+		padding:0;
+		margin:0;
+		position: absolute;
+		bottom:0;
+		right:0;
+		left:0;
+		top:58px;
+		overflow: auto;
+		background: #F2F2F2;
+		background: -webkit-repeating-linear-gradient(135deg, #EEE, #EEE 10px, #F2F2F2 10px, #F2F2F2 20px) center center;
+	}
+	
+	li, div.new {
+		border-bottom: 1px solid #EEE;
+		padding: 10px;
+	}
+	
+	li {
+		position: relative;
+		cursor: pointer;
+		overflow:hidden;
+		background: #FFF;
+	}
+	
+	li:last-child {
+		border-bottom: none;
+	}
+	
+	li.checked {
+		text-decoration:line-through;
+		background:#FDFDFD;
+	}
+	
+	li.checked span {
+		-webkit-transition: opacity 200ms;
+		color: #999;
+	}
+	
+	li::after, div.new::after {
+		content:'';
+		position: absolute;
+		right: 10px;
+		top: 10px;
+		line-height: 34px;
+		width: 34px;
+		height: 34px;
+		text-align:center;
+		border: 1px solid #CCC;
+		border-radius: 2;
+		color: #999;
+		background: #EEE;
+		font-size: 18px;
+	}
+	
+	li.checked::after {
+		content:'\2713'; /* Checkmark */
+	}
+	
+	div.new::after {
+		font-family: Helvetica;
+		content: '\21A9';
+		background: #666;
+		border-color: #333;
+		color: #FFF;
+		text-shadow: 0 0 1px #000;
+	}
+	
+	input[type=checkbox]{
+		display: inline-block;
+		margin: 0 10px;
+		width: 20px;
+		height: 20px;
+		vertical-align: middle;
+	}
+	span[contenteditable]{
+		cursor:text;
+	}
+	span[contenteditable]:hover {
+		border: 1px solid #CCC;
+		padding: 7px;
+	}
+	span:focus, .new span {
+		outline: none;
+		background: #F2F2F2;
+		border: 1px solid #CCC;
+		padding: 7px;
+	}
+	
+	@-webkit-keyframes throb {
+		0% { -webkit-transform: scale(0,0); opacity:1; }
+		50% { opacity: 1.0;}
+		100% { -webkit-transform: scale(1,1); opacity:0; }
+	}
+	div.throbber {
+		position: absolute;
+		top: 30%;
+		left: 50%;
+		-webkit-transform:translate(-9px,-9px);
+		-webkit-transform: opacity 200ms;
+		opacity: 0;
+		z-index: 21;
+	}
+	.loading div.throbber {
+		opacity:1;
+	}
+	div.throbber > div {
+		width: 18px;
+		height: 18px;
+		background: #999;
+		border-radius: 18px;
+		-webkit-animation: throb 0.5s infinite;
+		animation: throb 0.5s infinite;
+	}
+	
+	@media screen and (max-width:400px) {
+		body {
+			padding: 0px;
+		}
+		body > div {
+			top:0;
+			right:0;
+			left:0;
+			bottom:0;
+		}
+	}
+	
+	</style>
+<body>
+</body>
+<script type="text/javascript" src="https://js.simperium.com/v0.1/"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+var simperium = new Simperium('abusers-headset-026', { token : 'c1372dda10a44f96b3b540fae12b6ff7'});
+var bucket = simperium.bucket('todos');
+
+var container = $('<div></div>').addClass('loading').append($("<div class=\"throbber\"><div></div></div>")).appendTo(document.body),
+	ul = $('<ul></ul>').appendTo(container),
+	newLi = $('<div><span contenteditable></span></div>').appendTo(container).addClass('new');
+
+newLi.find('span')
+	.on('blur', function(e){
+		var $e = $(e.target);
+		if($e.text().trim() != ''){
+			var id = bucket.uuid(), data = {label:$e.text(), completed:false};
+			$e.text('').focus();
+			bucket.update(id, data);
+			makeItem(id, data, false);
+			ul.scrollTop(0);
+		}
+	})
+	.on('keydown', function(e){
+		if (e.which == 13) {
+			e.preventDefault();
+			var $e = $(e.target);
+			if($e.text().trim() != ''){
+				var id = bucket.uuid(), data = {label:$e.text(),completed:false};
+				$e.text('');
+				bucket.update(id, data);
+				var li = makeItem(id, data, false);
+			}
+		};
+	}).focus();
+
+var makeItem = function(id, data, bottom){
+	if (bottom !== false) bottom = true;;
+	var li = ul.find('#' + id);
+	if (li.length == 0) {
+		// build a new one
+		li = $('<li></li>').attr('id', id)[bottom ? 'appendTo' : 'prependTo'](ul);
+		var height = li.append(
+			$('<span></span>')
+				.text(data.label)
+				.on('keydown', function(e){
+					if (e.which == 13) {
+						e.preventDefault();
+						bucket.update(id,{label:$(e.target).text(),completed:li.hasClass('checked')});
+						$(e.target).blur();
+					} else if (e.which == 27){
+						e.preventDefault();
+						li.find('span')
+							.text(li.data('item').label)
+							.blur();
+					}
+				})
+				.on('blur', function(e){
+					bucket.update(id,{label:$(e.target).text(),completed:li.hasClass('checked')});
+				})
+			)
+			.height();
+		
+			li.css({height:0});
+			li.animate({height:height}, {duration:'fast', complete:function(){
+				li.css({height:''});
+			}});
+		
+		li.on('click', function(e){
+			if ($(e.target).is(li) || li.hasClass('checked')) {
+				var checked = li.toggleClass('checked').hasClass('checked');
+				if (checked) {
+					li.find('span').removeAttr('contenteditable');
+				} else {
+					li.find('span').attr('contenteditable','');
+				}
+				bucket.update(id,{label:li.find('span').text(),completed:checked});
+			};
+		});
+		
+	}
+ 	var label = li.data('item', data).toggleClass('checked', data.completed === true)
+	 .find('span')
+		.text(data.label);
+	if (data.completed) {
+		label.removeAttr('contenteditable');
+	} else {
+		label.attr('contenteditable','');
+	}
+	return li;
+}
+
+bucket.on('notify', function(id, data) {
+	container.removeClass('loading');
+	if (data) {
+		var item = makeItem(id, data);
+	} else {
+		$('#'+id).remove();
+	}
+});
+// bucket.on('local', function(id) {
+//     console.log("request for local state for object "+id+" received");
+//     return {"some": "json"};
+// });
+bucket.start();
+
+</script>
+
