@@ -205,6 +205,7 @@ newLi.find('span')
 				$e.text('');
 				bucket.update(id, data);
 				var li = makeItem(id, data, false);
+				ul.scrollTop(0);
 			}
 		};
 	}).focus();
