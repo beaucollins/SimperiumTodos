@@ -196,16 +196,6 @@ var container = $('<div></div>').addClass('loading').append($("<div class=\"thro
 	newLi = $('<div><span contenteditable></span></div>').appendTo(container).addClass('new');
 
 newLi.find('span')
-	.on('blur', function(e){
-		var $e = $(e.target);
-		if($e.text().trim() != ''){
-			var id = bucket.uuid(), data = {label:$e.text(), completed:false};
-			$e.text('').focus();
-			bucket.update(id, data);
-			makeItem(id, data, false);
-			ul.scrollTop(0);
-		}
-	})
 	.on('keydown', function(e){
 		if (e.which == 13) {
 			e.preventDefault();
