@@ -9,7 +9,7 @@
 		font-weight: 100;
 		padding: 0;
 		background: #CCC;
-		background: -webkit-repeating-linear-gradient(45deg, #CCC, #CCC 10px, #C9C9C9 10px, #C9C9C9 20px) center center;
+		background: -webkit-linear-gradient(45deg, #999, #666) center center;
 	}
 	span {
 		display: block;
@@ -21,7 +21,8 @@
 		min-height: 34px;
 	}
 	body > div {
-		background: #FFF;
+		background: #F2F2F2;
+		background: -webkit-repeating-linear-gradient(135deg, #EEE, #EEE 10px, #F2F2F2 10px, #F2F2F2 20px) center center;
 		position: absolute;
 		top: 20px;
 		bottom: 20px;
@@ -29,6 +30,7 @@
 		right: 10%;
 		-webkit-transition: 200ms;
 		box-shadow: 0 0 5px hsla(0,0%,0%,0.25);
+		border-radius: 2px;
 	}
 	
 	div.new {
@@ -39,6 +41,7 @@
 		background: #FFF;
 		background: -webkit-linear-gradient(#FFF, #EFEFEF, #FFF);
 		z-index:10;
+		border-radius: 2px 2px 0 0;
 	}
 	div.new::before {
 		content:'';
@@ -63,8 +66,6 @@
 		left:0;
 		top:58px;
 		overflow: auto;
-		background: #F2F2F2;
-		background: -webkit-repeating-linear-gradient(135deg, #EEE, #EEE 10px, #F2F2F2 10px, #F2F2F2 20px) center center;
 	}
 	
 	li, div.new {
@@ -85,7 +86,7 @@
 	
 	li.checked {
 		text-decoration:line-through;
-		background:#FDFDFD;
+		background:#FCFCFC;
 	}
 	
 	li.checked span {
